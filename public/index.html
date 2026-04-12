@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antojo Mortal | Postres Premium</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RJ67TS05YN"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RJ67TS05YN');
+    </script>
+    <meta name="description"
+        content="Antojo Mortal | Postres Premium en Bogotá. Disfruta de la mejor repostería artesanal: Postres en vaso, regalitos y fresas con chocolate. ¡Pide el tuyo por WhatsApp!">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://antojo-mortal.web.app/">
+    <meta property="og:title" content="Antojo Mortal | Postres Premium">
+    <meta property="og:description"
+        content="La armonía perfecta entre el chocolate premium y la frescura del rosado pastel. ¡Pide tu antojo artesanal hoy!">
+    <meta property="og:image" content="https://antojo-mortal.web.app/assets/vasos_artesanal.jpg">
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body style="position: relative;">
+    <div id="hearts-container"></div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <span class="elegant">Antojo</span><span class="mortal">Mortal</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#productos">Productos</a></li>
+                    <li><a href="#galeria">Galería</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-overlay"></div>
+            <div class="container hero-content">
+                <h1 class="reveal">Momentos Dulces, <br><span class="highlight">Antojos Inolvidables</span></h1>
+                <p class="reveal-delay">Descubre la armonía perfecta entre el chocolate premium y la frescura del rosado
+                    pastel. Postres diseñados para enamorar a primera vista y deleitar en cada bocado.</p>
+                <div class="hero-btns reveal-delay-2">
+                    <a href="https://wa.me/573001907982?text=Hola!%20Me%20gustaría%20pedir%20un%20Antojo%20Mortal%20🍰"
+                        class="btn btn-primary">
+                        <i class="fab fa-whatsapp"></i> Pedir Ahora
+                    </a>
+                    <a href="#galeria" class="btn btn-outline">Ver Galería</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="productos" class="products">
+            <div class="container">
+                <h2 class="section-title reveal">Nuestras Especialidades</h2>
+                <div class="products-grid">
+                    <!-- Dessert Cups -->
+                    <div class="product-card reveal" style="cursor: pointer;" data-title="Postre en Vaso"
+                        data-price="$12.000 - $15.000 COP"
+                        data-desc="Deliciosas capas de bizcocho artesanal, crema suave al punto justo de dulce y toppings premium seleccionados. La presentación perfecta para disfrutar de un antojo elegante y equilibrado en cualquier momento."
+                        data-image="assets/vasos_artesanal.jpg">
+                        <div class="product-img">
+                            <img src="assets/vasos_artesanal.jpg" alt="Postre en Vaso" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                            <h3>Postre en Vaso</h3>
+                            <p>Capas de sabor perfectamente equilibradas en un formato elegante y listo para disfrutar.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Bowls -->
+                    <div class="product-card reveal-delay" style="cursor: pointer;" data-title="Regalitos"
+                        data-price="$12.000 - $15.000 COP"
+                        data-desc="El detalle ideal para sorprender a alguien especial o para darte ese gusto que te mereces. Una combinación artesanal de sabores envuelta en una presentación que enamora a primera vista."
+                        data-image="assets/regalitos.jpg">
+                        <div class="product-img">
+                            <img src="assets/regalitos.jpg" alt="Regalitos" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                            <h3>Regalitos</h3>
+                            <p>Una experiencia generosa de texturas y toppings premium para los amantes del dulce.</p>
+                        </div>
+                    </div>
+                    <!-- Mini Cakes -->
+                    <div class="product-card reveal-delay-2" style="cursor: pointer;" data-title="Fresas con Chocolate"
+                        data-price="$18.000 COP"
+                        data-desc="Fresas seleccionadas una a una por su tamaño y frescura, bañadas en el más fino chocolate semiamargo. Un clásico atemporal de Antojo Mortal que nunca falla."
+                        data-image="assets/fresas.jpg">
+                        <div class="product-img">
+                            <img src="assets/fresas.jpg" alt="Fresas con Chocolate" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                            <h3>Fresas con Chocolate</h3>
+                            <p>Pequeñas obras de arte comestibles, ideales para celebraciones íntimas o antojos
+                                especiales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chef Section (New) -->
+        <section id="chef" class="chef-section">
+            <div class="container">
+                <div class="chef-container reveal">
+                    <div class="chef-img">
+                        <img src="assets/chef-carol.jpeg" alt="Chef Carol - Antojo Mortal" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div class="chef-text">
+                        <h2 class="elegant">El Corazón de Antojo Mortal</h2>
+                        <p>¡Hola! Soy <strong>Carol</strong>, la creadora y única repostera detrás de cada dulce que pruebas aquí.</p>
+                        <p>Cada postre que sale de mi cocina casera es una obra de arte elaborada de forma 100% artesanal y con mucha dedicación. Al encargarme personalmente de todo el proceso, desde la selección de los ingredientes hasta el último detalle de la decoración, te garantizo una experiencia de sabor genuina y llena de amor.</p>
+                        <p><em>"Cocinar dulces no es solo mezclar ingredientes, es crear momentos de felicidad que se quedan en el corazón."</em></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery / Instagram Section -->
+        <section id="galeria" class="instagram">
+            <div class="container">
+                <h2 class="section-title reveal">Síguenos en Instagram</h2>
+                <p class="instagram-subtitle reveal">@antojomortall</p>
+                <div class="instagram-grid">
+                    <div class="ig-post reveal">
+                        <iframe src="https://www.instagram.com/p/DWuWIlAkdai/embed" allowtransparency="true"
+                            frameborder="0" scrolling="no" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                    <div class="ig-post reveal-delay">
+                        <iframe src="https://www.instagram.com/p/DWsa-AZkfSN/embed" allowtransparency="true"
+                            frameborder="0" scrolling="no" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                    <div class="ig-post reveal-delay-2">
+                        <iframe src="https://www.instagram.com/p/DWw1DUAEbIQ/embed" allowtransparency="true"
+                            frameborder="0" scrolling="no" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                    <div class="ig-post reveal">
+                        <iframe src="https://www.instagram.com/p/DWw1kfKEay0/embed" allowtransparency="true"
+                            frameborder="0" scrolling="no" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section (New) -->
+        <section id="faq" class="faq-section">
+            <div class="container">
+                <h2 class="section-title reveal">Dudas Dulces</h2>
+                <div class="faq-grid">
+                    <div class="faq-item reveal">
+                        <div class="faq-question">
+                            <h3>¿Hacen domicilios?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>¡Sí! Realizamos domicilios en gran parte de Bogotá. El costo varía según la ubicación.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="faq-item reveal-delay">
+                        <div class="faq-question">
+                            <h3>¿Con cuánto tiempo de anticipación debo pedir?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Para asegurar la frescura artesanal, recomendamos pedir con al menos 24 a 48 horas de
+                                anticipación.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item reveal-delay-2">
+                        <div class="faq-question">
+                            <h3>¿Qué medios de pago aceptan?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Aceptamos Nequi, Daviplata y transferencias Bancolombia.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contacto" class="contact">
+            <div class="container">
+                <div class="contact-card reveal">
+                    <div class="contact-info">
+                        <h2>¿Tienes un Antojo?</h2>
+                        <p>Estamos aquí para endulzar tus momentos especiales. Contáctanos para pedidos personalizados o
+                            eventos.</p>
+                        <div class="contact-details">
+                            <div class="detail-item">
+                                <i class="fas fa-location-dot"></i>
+                                <span>Bogotá, Colombia</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-phone"></i>
+                                <span>+57 300 1907982</span>
+                            </div>
+                        </div>
+                        <div class="payment-methods">
+                            <span>Pagos por:</span>
+                            <div class="payment-badges">
+                                <span class="badge nequi">Nequi</span>
+                                <span class="badge daviplata">Daviplata</span>
+                                <span class="badge bancolombia">Bancolombia</span>
+                                <span class="badge bre-b">Bre-B</span>
+                            </div>
+                        </div>
+                        <div class="social-links">
+                            <a href="https://www.instagram.com/antojomortall/"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="contact-cta">
+                        <h3>Haz tu pedido</h3>
+                        <p>Atención inmediata por WhatsApp para que no te quedes con las ganas.</p>
+                        <a href="https://wa.me/573001907982?text=Hola!%20Me%20gustaría%20pedir%20un%20Antojo%20Mortal%20🍰"
+                            class="btn btn-primary">
+                            <i class="fab fa-whatsapp"></i> Chatear con nosotros
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Antojo Mortal. Diseñado con ❤️ y Chocolate.</p>
+        </div>
+    </footer>
+
+    <!-- Modal Structure -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="modal-body">
+                <div class="modal-img-container">
+                    <img src="" alt="" id="modalImg">
+                </div>
+                <div class="modal-text">
+                    <h2 id="modalTitle" class="elegant"></h2>
+                    <p id="modalDesc"></p>
+                    <p class="modal-price" id="modalPrice"></p>
+                    <div class="modal-actions">
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus"><i class="fas fa-minus"></i></button>
+                            <span class="qty-value">0</span>
+                            <button class="qty-btn plus"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <button class="btn btn-primary" id="addToCart">
+                            <i class="fas fa-cart-plus"></i> Agregar al Pedido
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating FAQ Widget -->
+    <div class="faq-widget">
+        <button class="faq-widget-btn" id="openFaqWidget">
+            <i class="fas fa-question"></i>
+        </button>
+        <div class="faq-widget-box" id="faqWidgetBox">
+            <div class="faq-widget-header">
+                <h3>Dudas Dulces</h3>
+                <button id="closeFaqWidget">&times;</button>
+            </div>
+            <div class="faq-widget-body" id="faqWidgetBody">
+                <!-- FAQs will be cloned here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Order Bar -->
+    <div class="order-bar" id="orderBar">
+        <div class="container order-bar-content">
+            <div class="order-summary">
+                <span id="orderCount">0</span> antojos seleccionados
+            </div>
+            <button class="btn btn-primary" id="sendOrderWA">
+                <i class="fab fa-whatsapp"></i> Enviar Pedido por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
