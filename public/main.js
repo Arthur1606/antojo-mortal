@@ -1,5 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Mobile Menu Toggle
+    // ══════════════════════════════════════════
+    // 1. PAGE LOAD CASCADE
+    // ══════════════════════════════════════════
+
+    // Stagger hero title words
+    const heroTitle = document.querySelector('.hero h1');
+    if (heroTitle) {
+        const originalHTML = heroTitle.innerHTML;
+        // Split text nodes into words, preserve <br> and <span> tags
+        const parts = originalHTML.split(/(<[^>]+>)/g);
+        let wordIndex = 0;
+        const wrappedHTML = parts.map(part => {
+            if (part.startsWith('<')) return part; // preserve tags
+            return part.split(/(\s+)/g).map(word => {
+                if (word.trim() === '') return word; // preserve whitespace
+                const delay = wordIndex * 0.08;
+                wordIndex++;
+                return `<span class="stagger-word" style="transition-delay:${delay}s">${word}</span>`;
+            }).join('');
+        }).join('');
+        heroTitle.innerHTML = wrappedHTML;
+    }
+
+    // Trigger page load cascade
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            document.body.classList.remove('page-loading');
+            // Trigger stagger words after a small delay
+            setTimeout(() => {
+                document.querySelectorAll('.stagger-word').forEach(w => {
+                    w.classList.add('visible');
+                });
+            }, 300);
+        });
+    });
+
+    // ══════════════════════════════════════════
+    // 2. MOBILE MENU TOGGLE
+    // ══════════════════════════════════════════
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
 
@@ -16,7 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Header Scroll Effect
+    // ══════════════════════════════════════════
+    // 3. HEADER SCROLL EFFECT
+    // ══════════════════════════════════════════
     const header = document.querySelector('header');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
@@ -26,7 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Reveal Animations on Scroll
+    // ══════════════════════════════════════════
+    // 4. IMPROVED SCROLL REVEALS WITH STAGGER
+    // ══════════════════════════════════════════
     const observerOptions = {
         threshold: 0.15
     };
@@ -39,10 +81,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
+    // Standard reveal elements
     const revealElements = document.querySelectorAll('.reveal, .reveal-delay, .reveal-delay-2');
     revealElements.forEach(el => observer.observe(el));
 
-    // Smooth Scrolling for navigation links
+    // Chef section: observe the container for directional reveal
+    const chefContainer = document.querySelector('.chef-container');
+    if (chefContainer) {
+        observer.observe(chefContainer);
+    }
+
+    // ══════════════════════════════════════════
+    // 5. SMOOTH SCROLLING
+    // ══════════════════════════════════════════
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -62,7 +113,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Product Modal & Cart Logic
+    // ══════════════════════════════════════════
+    // 6. BUTTON SQUEEZE FEEDBACK
+    // ══════════════════════════════════════════
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('mousedown', () => btn.classList.add('squeeze'));
+        btn.addEventListener('mouseup', () => {
+            setTimeout(() => btn.classList.remove('squeeze'), 100);
+        });
+        btn.addEventListener('mouseleave', () => btn.classList.remove('squeeze'));
+        // Touch support
+        btn.addEventListener('touchstart', () => btn.classList.add('squeeze'), { passive: true });
+        btn.addEventListener('touchend', () => {
+            setTimeout(() => btn.classList.remove('squeeze'), 100);
+        });
+    });
+
+    // ══════════════════════════════════════════
+    // 7. PRODUCT MODAL & CART LOGIC
+    // ══════════════════════════════════════════
     const modal = document.getElementById('productModal');
     const closeBtn = document.getElementById('closeModal');
     const modalImg = document.getElementById('modalImg');
@@ -85,7 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let cart = JSON.parse(localStorage.getItem('antojo_cart')) || {}; // Store productTitle: quantity
     
     // Initialize UI on load
-    updateOrderBar();
+    updateOrderBar(false); // no bounce on initial load
+
+    // Create success overlay for the addToCart button
+    const successOverlay = document.createElement('span');
+    successOverlay.className = 'cart-success-overlay';
+    successOverlay.innerHTML = '<i class="fas fa-check"></i>';
+    addToCartBtn.appendChild(successOverlay);
 
     const productCards = document.querySelectorAll('.product-card');
 
@@ -125,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (val > 0) qtyValue.textContent = val - 1;
     });
 
-    // Add to Cart Logic
+    // Add to Cart Logic with Success Animation
     addToCartBtn.addEventListener('click', () => {
         const qty = parseInt(qtyValue.textContent);
         if (qty > 0) {
@@ -133,18 +208,52 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             delete cart[currentProduct];
         }
-        updateOrderBar();
-        closeModal();
+
+        // Show success checkmark
+        successOverlay.classList.add('show');
+        
+        // Update bar with bounce after a brief pause
+        setTimeout(() => {
+            updateOrderBar(true);
+        }, 200);
+
+        // Hide checkmark and close modal
+        setTimeout(() => {
+            successOverlay.classList.remove('show');
+            closeModal();
+        }, 700);
     });
 
-    function updateOrderBar() {
+    function updateOrderBar(shouldBounce) {
         localStorage.setItem('antojo_cart', JSON.stringify(cart));
         const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
+        
         if (totalItems > 0) {
-            orderCount.textContent = totalItems;
+            // Animate counter
+            const prev = parseInt(orderCount.textContent);
+            if (prev !== totalItems) {
+                orderCount.classList.add('counting');
+                orderCount.textContent = totalItems;
+                orderCount.addEventListener('animationend', () => {
+                    orderCount.classList.remove('counting');
+                }, { once: true });
+            }
+
             orderBar.classList.add('active');
             if (sendOrderBtn) sendOrderBtn.classList.add('pulse-active');
+
+            // Bounce the bar
+            if (shouldBounce && orderBar.classList.contains('active')) {
+                orderBar.classList.remove('bounce');
+                // Force reflow to restart animation
+                void orderBar.offsetWidth;
+                orderBar.classList.add('bounce');
+                orderBar.addEventListener('animationend', () => {
+                    orderBar.classList.remove('bounce');
+                }, { once: true });
+            }
         } else {
+            orderCount.textContent = 0;
             orderBar.classList.remove('active');
             if (sendOrderBtn) sendOrderBtn.classList.remove('pulse-active');
         }
@@ -169,7 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     closeBtn.addEventListener('click', closeModal);
 
-    // FAQ Accordion Logic
+    // ══════════════════════════════════════════
+    // 8. FAQ ACCORDION LOGIC
+    // ══════════════════════════════════════════
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
@@ -178,7 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // FAQ Floating Widget Logic
+    // ══════════════════════════════════════════
+    // 9. FAQ FLOATING WIDGET LOGIC
+    // ══════════════════════════════════════════
     const originalFaqGrid = document.querySelector('.faq-grid');
     const faqWidgetBody = document.getElementById('faqWidgetBody');
     const faqWidgetBox = document.getElementById('faqWidgetBox');
@@ -216,6 +329,9 @@ document.addEventListener('DOMContentLoaded', () => {
         faqWidgetBox.classList.remove('active');
     });
 
+    // ══════════════════════════════════════════
+    // 10. GLOBAL EVENT HANDLERS
+    // ══════════════════════════════════════════
     // Close on outside click or Esc
     window.addEventListener('click', (e) => { 
         if (e.target === modal) closeModal(); 
@@ -231,7 +347,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Floating Hearts Generation
+    // ══════════════════════════════════════════
+    // 11. FLOATING HEARTS GENERATION
+    // ══════════════════════════════════════════
     function initBackgroundHearts() {
         const container = document.getElementById('hearts-container');
         if (!container) return;

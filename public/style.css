@@ -9,6 +9,10 @@
     --shadow: 0 8px 30px rgba(90, 75, 70, 0.04);
     --shadow-hover: 0 15px 40px rgba(232, 180, 184, 0.2);
     --transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    /* Google-style easings */
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+    --ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
 }
 
 * {
@@ -273,7 +277,7 @@ section {
 }
 
 .product-card:hover {
-    transform: translateY(-12px);
+    transform: translateY(-8px);
     box-shadow: var(--shadow-hover);
     border-color: rgba(232, 180, 184, 0.3);
 }
@@ -287,11 +291,11 @@ section {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: transform 0.7s var(--ease-decelerate);
 }
 
 .product-card:hover .product-img img {
-    transform: scale(1.05);
+    transform: scale(1.03);
 }
 
 .product-info {
@@ -568,8 +572,8 @@ footer p {
 /* Animations */
 .reveal {
     opacity: 0;
-    transform: translateY(40px);
-    transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+    transform: translateY(30px);
+    transition: opacity 0.8s var(--ease-decelerate), transform 0.8s var(--ease-decelerate);
 }
 
 .reveal.active {
@@ -579,8 +583,8 @@ footer p {
 
 .reveal-delay {
     opacity: 0;
-    transform: translateY(40px);
-    transition: all 1s cubic-bezier(0.25, 1, 0.5, 1) 0.2s;
+    transform: translateY(30px);
+    transition: opacity 0.8s var(--ease-decelerate) 0.15s, transform 0.8s var(--ease-decelerate) 0.15s;
 }
 
 .reveal-delay.active {
@@ -590,13 +594,195 @@ footer p {
 
 .reveal-delay-2 {
     opacity: 0;
-    transform: translateY(40px);
-    transition: all 1s cubic-bezier(0.25, 1, 0.5, 1) 0.4s;
+    transform: translateY(30px);
+    transition: opacity 0.8s var(--ease-decelerate) 0.3s, transform 0.8s var(--ease-decelerate) 0.3s;
 }
 
 .reveal-delay-2.active {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Page Load Cascade */
+body.page-loading .hero-content > * {
+    opacity: 0;
+    transform: translateY(25px);
+}
+
+body:not(.page-loading) .hero-content > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body:not(.page-loading) .hero-content > *:nth-child(1) {
+    transition: opacity 0.7s var(--ease-decelerate) 0.2s, transform 0.7s var(--ease-decelerate) 0.2s;
+}
+body:not(.page-loading) .hero-content > *:nth-child(2) {
+    transition: opacity 0.7s var(--ease-decelerate) 0.4s, transform 0.7s var(--ease-decelerate) 0.4s;
+}
+body:not(.page-loading) .hero-content > *:nth-child(3) {
+    transition: opacity 0.7s var(--ease-decelerate) 0.6s, transform 0.7s var(--ease-decelerate) 0.6s;
+}
+
+/* Staggered Word Animation for Hero Title */
+.stagger-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s var(--ease-decelerate), transform 0.6s var(--ease-decelerate);
+}
+
+.stagger-word.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Badge Shimmer */
+@keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.product-card:hover .product-badge {
+    background: linear-gradient(90deg, #d4af37 0%, #fdf5e6 40%, #f5e6b8 50%, #fdf5e6 60%, #d4af37 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out;
+}
+
+/* Button Squeeze Feedback */
+.btn.squeeze {
+    transform: scale(0.96) !important;
+    transition: transform 0.1s var(--ease-accelerate) !important;
+}
+
+/* Smooth lift on product card text on hover */
+.product-card:hover .product-info h3 {
+    transform: translateY(-2px);
+    transition: transform 0.4s var(--ease-decelerate);
+}
+
+.product-info h3 {
+    transition: transform 0.4s var(--ease-decelerate);
+}
+
+/* Modal Cinematic Entrance */
+.modal-overlay.active .modal-img-container {
+    animation: clipRevealLeft 0.6s var(--ease-decelerate) 0.1s both;
+}
+
+.modal-overlay.active .modal-text > * {
+    opacity: 0;
+    animation: modalTextIn 0.5s var(--ease-decelerate) both;
+}
+.modal-overlay.active .modal-text > *:nth-child(1) { animation-delay: 0.25s; }
+.modal-overlay.active .modal-text > *:nth-child(2) { animation-delay: 0.35s; }
+.modal-overlay.active .modal-text > *:nth-child(3) { animation-delay: 0.45s; }
+.modal-overlay.active .modal-text > *:nth-child(4) { animation-delay: 0.55s; }
+
+@keyframes clipRevealLeft {
+    from {
+        clip-path: inset(0 100% 0 0);
+        opacity: 0;
+    }
+    to {
+        clip-path: inset(0 0 0 0);
+        opacity: 1;
+    }
+}
+
+@keyframes modalTextIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Cart Success Checkmark */
+.cart-success-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(232, 180, 184, 0.95);
+    border-radius: 50px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s var(--ease-standard), transform 0.3s var(--ease-decelerate);
+    pointer-events: none;
+    color: white;
+    font-size: 1.4rem;
+    z-index: 5;
+}
+
+.cart-success-overlay.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Make addToCart button position relative for overlay */
+#addToCart {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Order Bar bounce on update */
+@keyframes barBounce {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+    50% { transform: translateY(0); }
+    70% { transform: translateY(-3px); }
+    100% { transform: translateY(0); }
+}
+
+.order-bar.bounce {
+    animation: barBounce 0.5s var(--ease-standard);
+}
+
+/* Counter digit transition */
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#orderCount {
+    display: inline-block;
+}
+
+#orderCount.counting {
+    animation: countUp 0.35s var(--ease-decelerate);
+}
+
+/* Chef section directional reveals */
+.chef-container .chef-img {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.9s var(--ease-decelerate), transform 0.9s var(--ease-decelerate);
+}
+
+.chef-container .chef-text {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.9s var(--ease-decelerate) 0.15s, transform 0.9s var(--ease-decelerate) 0.15s;
+}
+
+.chef-container.active .chef-img,
+.chef-container.active .chef-text {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 /* Responsive */
