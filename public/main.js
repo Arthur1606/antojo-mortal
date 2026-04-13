@@ -82,7 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendOrderBtn = document.getElementById('sendOrderWA');
 
     let currentProduct = null;
-    let cart = {}; // Store productTitle: quantity
+    let cart = JSON.parse(localStorage.getItem('antojo_cart')) || {}; // Store productTitle: quantity
+    
+    // Initialize UI on load
+    updateOrderBar();
 
     const productCards = document.querySelectorAll('.product-card');
 
@@ -135,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateOrderBar() {
+        localStorage.setItem('antojo_cart', JSON.stringify(cart));
         const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
         if (totalItems > 0) {
             orderCount.textContent = totalItems;
