@@ -579,6 +579,23 @@ footer p {
 @media (max-width: 768px) {
     .nav-links {
         display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(250, 247, 245, 0.98);
+        backdrop-filter: blur(15px);
+        flex-direction: column;
+        padding: 30px;
+        gap: 25px;
+        text-align: center;
+        border-bottom: 1px solid rgba(232, 180, 184, 0.2);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        z-index: 999;
+    }
+
+    .nav-links.active {
+        display: flex;
     }
     
     .menu-toggle {
@@ -586,7 +603,7 @@ footer p {
     }
     
     .hero h1 {
-        font-size: 3rem;
+        font-size: 2.5rem;
     }
     
     .hero p {
@@ -596,6 +613,7 @@ footer p {
     .hero-btns {
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }
     
     .btn {
