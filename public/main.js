@@ -138,8 +138,10 @@
         if (totalItems > 0) {
             orderCount.textContent = totalItems;
             orderBar.classList.add('active');
+            if (sendOrderBtn) sendOrderBtn.classList.add('pulse-active');
         } else {
             orderBar.classList.remove('active');
+            if (sendOrderBtn) sendOrderBtn.classList.remove('pulse-active');
         }
     }
 

@@ -194,44 +194,43 @@ nav {
     padding: 16px 36px;
     border-radius: 50px;
     text-decoration: none;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 0.9rem;
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    letter-spacing: 1px;
-    transition: var(--transition);
-    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 .btn-primary {
-    background-color: var(--accent-pink);
+    background-color: rgba(232, 180, 184, 0.85); /* Translucent Pastel Pink */
     color: var(--white);
-    border: 1px solid var(--accent-pink);
-    box-shadow: 0 4px 15px rgba(232, 180, 184, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(232, 180, 184, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
 .btn-primary:hover {
-    background-color: #dda3a7;
-    border-color: #dda3a7;
-    color: var(--white);
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 10px 25px rgba(232, 180, 184, 0.5);
+    background-color: rgba(221, 163, 167, 0.95);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(232, 180, 184, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
 
 .btn-outline {
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.1);
     color: var(--white);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 .btn-outline:hover {
-    background-color: var(--white);
-    color: var(--chocolate);
-    transform: translateY(-4px) scale(1.02);
-    border-color: var(--white);
-    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.4);
 }
 
 /* Sections General */
@@ -350,6 +349,41 @@ section {
     transform: translateY(-8px);
     box-shadow: var(--shadow-hover);
 }
+
+.product-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #d4af37, #fdf5e6, #d4af37);
+    color: #4a3b32; /* Golden contrast chocolate text */
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+    z-index: 10;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+}
+
+/* Pulse Animation for Order Bar button */
+@keyframes orderPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(232, 180, 184, 0.6);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(232, 180, 184, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(232, 180, 184, 0);
+    }
+}
+
+.btn-primary.pulse-active {
+    animation: orderPulse 2s infinite;
+}
+
 
 .ig-placeholder {
     text-align: center;
