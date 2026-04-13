@@ -8,7 +8,7 @@
     --white: #ffffff;
     --shadow: 0 8px 30px rgba(90, 75, 70, 0.04);
     --shadow-hover: 0 15px 40px rgba(232, 180, 184, 0.2);
-    --transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    --transition: opacity 0.5s var(--ease-standard), transform 0.5s var(--ease-standard), background-color 0.3s var(--ease-standard), border-color 0.3s var(--ease-standard);
     /* Google-style easings */
     --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
@@ -204,7 +204,8 @@ nav {
     align-items: center;
     gap: 12px;
     letter-spacing: 0.5px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s var(--ease-standard), background-color 0.3s var(--ease-standard), border-color 0.3s var(--ease-standard), box-shadow 0.3s var(--ease-standard);
+    will-change: transform;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 }
@@ -272,8 +273,9 @@ section {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: var(--shadow);
-    transition: var(--transition);
+    transition: opacity 0.4s var(--ease-standard), transform 0.4s var(--ease-standard), border-color 0.3s var(--ease-standard), box-shadow 0.3s var(--ease-standard);
     border: 1px solid rgba(232, 180, 184, 0.1);
+    will-change: transform, opacity;
 }
 
 .product-card:hover {
@@ -574,6 +576,7 @@ footer p {
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.8s var(--ease-decelerate), transform 0.8s var(--ease-decelerate);
+    will-change: transform, opacity;
 }
 
 .reveal.active {
@@ -646,7 +649,8 @@ body:not(.page-loading) .hero-content > *:nth-child(3) {
 .product-card:hover .product-badge {
     background: linear-gradient(90deg, #d4af37 0%, #fdf5e6 40%, #f5e6b8 50%, #fdf5e6 60%, #d4af37 100%);
     background-size: 200% 100%;
-    animation: shimmer 2s ease-in-out;
+    animation: shimmer 2s var(--ease-standard);
+    will-change: background-position;
 }
 
 /* Button Squeeze Feedback */

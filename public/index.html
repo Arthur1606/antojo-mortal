@@ -33,6 +33,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Preload Critical Assets -->
+    <link rel="preload" href="assets/hero.webp" as="image" fetchpriority="high">
 </head>
 
 <body style="position: relative;" class="page-loading">
@@ -49,7 +52,7 @@
                     <li><a href="#galeria">Galería</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                 </ul>
-                <div class="menu-toggle">
+                <div class="menu-toggle" aria-label="Abrir menú de navegación" role="button">
                     <i class="fas fa-bars"></i>
                 </div>
             </nav>
@@ -261,7 +264,7 @@
     <!-- Modal Structure -->
     <div class="modal-overlay" id="productModal">
         <div class="modal-content">
-            <button class="modal-close" id="closeModal">&times;</button>
+            <button class="modal-close" id="closeModal" aria-label="Cerrar modal">&times;</button>
             <div class="modal-body">
                 <div class="modal-img-container">
                     <img src="" alt="" id="modalImg">
@@ -272,9 +275,9 @@
                     <p class="modal-price" id="modalPrice"></p>
                     <div class="modal-actions">
                         <div class="quantity-selector">
-                            <button class="qty-btn minus"><i class="fas fa-minus"></i></button>
+                            <button class="qty-btn minus" aria-label="Disminuir cantidad"><i class="fas fa-minus"></i></button>
                             <span class="qty-value">0</span>
-                            <button class="qty-btn plus"><i class="fas fa-plus"></i></button>
+                            <button class="qty-btn plus" aria-label="Aumentar cantidad"><i class="fas fa-plus"></i></button>
                         </div>
                         <button class="btn btn-primary" id="addToCart">
                             <i class="fas fa-cart-plus"></i> Agregar al Pedido
@@ -293,7 +296,7 @@
         <div class="faq-widget-box" id="faqWidgetBox">
             <div class="faq-widget-header">
                 <h3>Dudas Dulces</h3>
-                <button id="closeFaqWidget">&times;</button>
+                <button id="closeFaqWidget" aria-label="Cerrar preguntas frecuentes">&times;</button>
             </div>
             <div class="faq-widget-body" id="faqWidgetBody">
                 <!-- FAQs will be cloned here dynamically -->

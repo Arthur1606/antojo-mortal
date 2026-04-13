@@ -1,223 +1,149 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ══════════════════════════════════════════
+    // 0. DOM CACHE
+    // ══════════════════════════════════════════
+    const body = document.body;
+    const header = document.querySelector('header');
+    const heroTitle = document.querySelector('.hero h1');
+    const modal = document.getElementById('productModal');
+    const orderBar = document.getElementById('orderBar');
+    const orderCount = document.getElementById('orderCount');
+    const sendOrderBtn = document.getElementById('sendOrderWA');
+    const faqWidgetBox = document.getElementById('faqWidgetBox');
+    const openFaqWidgetBtn = document.getElementById('openFaqWidget');
+    const heartsContainer = document.getElementById('hearts-container');
+
+    // ══════════════════════════════════════════
     // 1. PAGE LOAD CASCADE
     // ══════════════════════════════════════════
-
-    // Stagger hero title words
-    const heroTitle = document.querySelector('.hero h1');
     if (heroTitle) {
         const originalHTML = heroTitle.innerHTML;
-        // Split text nodes into words, preserve <br> and <span> tags
         const parts = originalHTML.split(/(<[^>]+>)/g);
         let wordIndex = 0;
-        const wrappedHTML = parts.map(part => {
-            if (part.startsWith('<')) return part; // preserve tags
+        heroTitle.innerHTML = parts.map(part => {
+            if (part.startsWith('<')) return part;
             return part.split(/(\s+)/g).map(word => {
-                if (word.trim() === '') return word; // preserve whitespace
-                const delay = wordIndex * 0.08;
-                wordIndex++;
-                return `<span class="stagger-word" style="transition-delay:${delay}s">${word}</span>`;
+                if (!word.trim()) return word;
+                return `<span class="stagger-word" style="transition-delay:${wordIndex++ * 0.08}s">${word}</span>`;
             }).join('');
         }).join('');
-        heroTitle.innerHTML = wrappedHTML;
     }
 
-    // Trigger page load cascade
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-            document.body.classList.remove('page-loading');
-            // Trigger stagger words after a small delay
+            body.classList.remove('page-loading');
             setTimeout(() => {
-                document.querySelectorAll('.stagger-word').forEach(w => {
-                    w.classList.add('visible');
-                });
+                document.querySelectorAll('.stagger-word').forEach(w => w.classList.add('visible'));
             }, 300);
         });
     });
 
     // ══════════════════════════════════════════
-    // 2. MOBILE MENU TOGGLE
+    // 2. NAVIGATION & HEADER
     // ══════════════════════════════════════════
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
 
     if (menuToggle && navLinks) {
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        // Close menu when clicking a link
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
+        menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+        navLinks.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') navLinks.classList.remove('active');
         });
     }
 
-    // ══════════════════════════════════════════
-    // 3. HEADER SCROLL EFFECT
-    // ══════════════════════════════════════════
-    const header = document.querySelector('header');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
+        header.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
 
     // ══════════════════════════════════════════
-    // 4. IMPROVED SCROLL REVEALS WITH STAGGER
+    // 3. SCROLL REVEALS (Intersection Observer)
     // ══════════════════════════════════════════
-    const observerOptions = {
-        threshold: 0.15
-    };
-
-    const observer = new IntersectionObserver((entries) => {
+    const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
+                revealObserver.unobserve(entry.target); // Optimize: stop observing once revealed
             }
         });
-    }, observerOptions);
+    }, { threshold: 0.15 });
 
-    // Standard reveal elements
-    const revealElements = document.querySelectorAll('.reveal, .reveal-delay, .reveal-delay-2');
-    revealElements.forEach(el => observer.observe(el));
-
-    // Chef section: observe the container for directional reveal
-    const chefContainer = document.querySelector('.chef-container');
-    if (chefContainer) {
-        observer.observe(chefContainer);
-    }
+    document.querySelectorAll('.reveal, .reveal-delay, .reveal-delay-2, .chef-container').forEach(el => revealObserver.observe(el));
 
     // ══════════════════════════════════════════
-    // 5. SMOOTH SCROLLING
+    // 4. BUTTON FEEDBACK (Delegation or Global)
     // ══════════════════════════════════════════
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                const headerOffset = 80;
-                const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
+    body.addEventListener('mousedown', e => {
+        const btn = e.target.closest('.btn');
+        if (btn) btn.classList.add('squeeze');
     });
+    const releaseSqueeze = e => {
+        const btn = e.target.closest('.btn');
+        if (btn) setTimeout(() => btn.classList.remove('squeeze'), 100);
+    };
+    body.addEventListener('mouseup', releaseSqueeze);
+    body.addEventListener('mouseleave', releaseSqueeze);
+    body.addEventListener('touchstart', e => {
+        const btn = e.target.closest('.btn');
+        if (btn) btn.classList.add('squeeze');
+    }, { passive: true });
+    body.addEventListener('touchend', releaseSqueeze);
 
     // ══════════════════════════════════════════
-    // 6. BUTTON SQUEEZE FEEDBACK
+    // 5. PRODUCT MODAL & CART
     // ══════════════════════════════════════════
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('mousedown', () => btn.classList.add('squeeze'));
-        btn.addEventListener('mouseup', () => {
-            setTimeout(() => btn.classList.remove('squeeze'), 100);
-        });
-        btn.addEventListener('mouseleave', () => btn.classList.remove('squeeze'));
-        // Touch support
-        btn.addEventListener('touchstart', () => btn.classList.add('squeeze'), { passive: true });
-        btn.addEventListener('touchend', () => {
-            setTimeout(() => btn.classList.remove('squeeze'), 100);
-        });
-    });
-
-    // ══════════════════════════════════════════
-    // 7. PRODUCT MODAL & CART LOGIC
-    // ══════════════════════════════════════════
-    const modal = document.getElementById('productModal');
-    const closeBtn = document.getElementById('closeModal');
     const modalImg = document.getElementById('modalImg');
     const modalTitle = document.getElementById('modalTitle');
     const modalDesc = document.getElementById('modalDesc');
     const modalPrice = document.getElementById('modalPrice');
     const addToCartBtn = document.getElementById('addToCart');
-    
-    // Quantity Selector Elements
-    const qtyMinus = modal.querySelector('.minus');
-    const qtyPlus = modal.querySelector('.plus');
     const qtyValue = modal.querySelector('.qty-value');
 
-    // Order Bar Elements
-    const orderBar = document.getElementById('orderBar');
-    const orderCount = document.getElementById('orderCount');
-    const sendOrderBtn = document.getElementById('sendOrderWA');
-
     let currentProduct = null;
-    let cart = JSON.parse(localStorage.getItem('antojo_cart')) || {}; // Store productTitle: quantity
-    
-    // Initialize UI on load
-    updateOrderBar(false); // no bounce on initial load
+    let cart = JSON.parse(localStorage.getItem('antojo_cart')) || {};
 
-    // Create success overlay for the addToCart button
+    // Event Delegation for Product Cards
+    document.querySelector('.products-grid').addEventListener('click', e => {
+        const card = e.target.closest('.product-card');
+        if (!card) return;
+
+        const { title, price, desc, image } = card.dataset;
+        currentProduct = title;
+        
+        modalImg.src = image;
+        modalImg.alt = title;
+        modalTitle.textContent = title;
+        modalDesc.textContent = desc;
+        modalPrice.textContent = price;
+        qtyValue.textContent = cart[title] || 0;
+
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+    });
+
+    modal.addEventListener('click', e => {
+        if (e.target.closest('.minus')) {
+            let val = parseInt(qtyValue.textContent);
+            if (val > 0) qtyValue.textContent = val - 1;
+        } else if (e.target.closest('.plus')) {
+            qtyValue.textContent = parseInt(qtyValue.textContent) + 1;
+        } else if (e.target.id === 'closeModal' || e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Cart Success Overlay
     const successOverlay = document.createElement('span');
     successOverlay.className = 'cart-success-overlay';
     successOverlay.innerHTML = '<i class="fas fa-check"></i>';
     addToCartBtn.appendChild(successOverlay);
 
-    const productCards = document.querySelectorAll('.product-card');
-
-    productCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const title = card.getAttribute('data-title');
-            const price = card.getAttribute('data-price');
-            const desc = card.getAttribute('data-desc');
-            const img = card.getAttribute('data-image');
-
-            currentProduct = title;
-            
-            // Populate Modal
-            modalImg.src = img;
-            modalImg.alt = title;
-            modalTitle.textContent = title;
-            modalDesc.textContent = desc;
-            modalPrice.textContent = price;
-            
-            // Reset quantity display to current cart value or 0
-            qtyValue.textContent = cart[title] || 0;
-
-            // Show Modal
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('active'), 10);
-        });
-    });
-
-    // Quantity Adjustment
-    qtyPlus.addEventListener('click', () => {
-        let val = parseInt(qtyValue.textContent);
-        qtyValue.textContent = val + 1;
-    });
-
-    qtyMinus.addEventListener('click', () => {
-        let val = parseInt(qtyValue.textContent);
-        if (val > 0) qtyValue.textContent = val - 1;
-    });
-
-    // Add to Cart Logic with Success Animation
     addToCartBtn.addEventListener('click', () => {
         const qty = parseInt(qtyValue.textContent);
-        if (qty > 0) {
-            cart[currentProduct] = qty;
-        } else {
-            delete cart[currentProduct];
-        }
+        if (qty > 0) cart[currentProduct] = qty;
+        else delete cart[currentProduct];
 
-        // Show success checkmark
         successOverlay.classList.add('show');
-        
-        // Update bar with bounce after a brief pause
-        setTimeout(() => {
-            updateOrderBar(true);
-        }, 200);
-
-        // Hide checkmark and close modal
+        setTimeout(() => updateOrderBar(true), 200);
         setTimeout(() => {
             successOverlay.classList.remove('show');
             closeModal();
@@ -229,28 +155,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
         
         if (totalItems > 0) {
-            // Animate counter
             const prev = parseInt(orderCount.textContent);
             if (prev !== totalItems) {
                 orderCount.classList.add('counting');
                 orderCount.textContent = totalItems;
-                orderCount.addEventListener('animationend', () => {
-                    orderCount.classList.remove('counting');
-                }, { once: true });
+                orderCount.addEventListener('animationend', () => orderCount.classList.remove('counting'), { once: true });
             }
-
             orderBar.classList.add('active');
             if (sendOrderBtn) sendOrderBtn.classList.add('pulse-active');
 
-            // Bounce the bar
-            if (shouldBounce && orderBar.classList.contains('active')) {
+            if (shouldBounce) {
                 orderBar.classList.remove('bounce');
-                // Force reflow to restart animation
                 void orderBar.offsetWidth;
                 orderBar.classList.add('bounce');
-                orderBar.addEventListener('animationend', () => {
-                    orderBar.classList.remove('bounce');
-                }, { once: true });
             }
         } else {
             orderCount.textContent = 0;
@@ -259,16 +176,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Send Order to WhatsApp
     sendOrderBtn.addEventListener('click', () => {
         let message = "¡Hola! Me gustaría hacer un pedido de Antojo Mortal: \n\n";
-        for (const [product, qty] of Object.entries(cart)) {
-            message += `• ${qty}x ${product}\n`;
-        }
+        for (const [product, qty] of Object.entries(cart)) message += `• ${qty}x ${product}\n`;
         message += "\n¿Me confirman disponibilidad y el valor total del envío? 🍰";
-        
-        const encodedMsg = encodeURIComponent(message);
-        window.open(`https://wa.me/573001907982?text=${encodedMsg}`, '_blank');
+        window.open(`https://wa.me/573001907982?text=${encodeURIComponent(message)}`, '_blank');
     });
 
     const closeModal = () => {
@@ -276,107 +188,79 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => modal.style.display = 'none', 400);
     };
 
-    closeBtn.addEventListener('click', closeModal);
+    updateOrderBar(false);
 
     // ══════════════════════════════════════════
-    // 8. FAQ ACCORDION LOGIC
+    // 6. FAQ & WIDGET
     // ══════════════════════════════════════════
-    const faqItems = document.querySelectorAll('.faq-item');
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        question.addEventListener('click', () => {
-            item.classList.toggle('faq-open');
-        });
+    const faqGrid = document.querySelector('.faq-grid');
+    const faqWidgetBody = document.getElementById('faqWidgetBody');
+    
+    // Toggle main FAQ
+    faqGrid.addEventListener('click', e => {
+        const item = e.target.closest('.faq-item');
+        if (item) item.classList.toggle('faq-open');
     });
 
-    // ══════════════════════════════════════════
-    // 9. FAQ FLOATING WIDGET LOGIC
-    // ══════════════════════════════════════════
-    const originalFaqGrid = document.querySelector('.faq-grid');
-    const faqWidgetBody = document.getElementById('faqWidgetBody');
-    const faqWidgetBox = document.getElementById('faqWidgetBox');
-    const openFaqWidgetBtn = document.getElementById('openFaqWidget');
-    const closeFaqWidgetBtn = document.getElementById('closeFaqWidget');
-
-    if (originalFaqGrid && faqWidgetBody) {
-        // Clone the FAQ grid
-        const clonedGrid = originalFaqGrid.cloneNode(true);
+    // Clone and Setup Widget
+    if (faqGrid && faqWidgetBody) {
+        const clonedGrid = faqGrid.cloneNode(true);
+        clonedGrid.querySelectorAll('.reveal, .reveal-delay, .reveal-delay-2').forEach(el => {
+            el.classList.remove('reveal', 'reveal-delay', 'reveal-delay-2');
+            el.style.cssText = 'opacity:1; transform:none;';
+        });
         faqWidgetBody.appendChild(clonedGrid);
-        
-        // Re-attach accordion logic to the cloned items since cloneNode doesn't clone event listeners
-        const widgetFaqItems = clonedGrid.querySelectorAll('.faq-item');
-        widgetFaqItems.forEach(item => {
-            // Remove reveal classes so they don't stay hidden in the fixed popup
-            item.classList.remove('reveal', 'reveal-delay', 'reveal-delay-2');
-            item.style.opacity = '1';
-            item.style.transform = 'none';
-
-            const question = item.querySelector('.faq-question');
-            question.addEventListener('click', () => {
-                // Ensure other items close (optional style preference, but let's keep it simple toggle)
-                item.classList.toggle('faq-open');
-            });
+        clonedGrid.addEventListener('click', e => {
+            const item = e.target.closest('.faq-item');
+            if (item) item.classList.toggle('faq-open');
         });
     }
 
-    // Toggle popup visibility
-    openFaqWidgetBtn.addEventListener('click', (e) => {
+    openFaqWidgetBtn.addEventListener('click', e => {
         e.stopPropagation();
         faqWidgetBox.classList.toggle('active');
     });
 
-    closeFaqWidgetBtn.addEventListener('click', () => {
-        faqWidgetBox.classList.remove('active');
-    });
+    document.getElementById('closeFaqWidget').addEventListener('click', () => faqWidgetBox.classList.remove('active'));
 
-    // ══════════════════════════════════════════
-    // 10. GLOBAL EVENT HANDLERS
-    // ══════════════════════════════════════════
-    // Close on outside click or Esc
-    window.addEventListener('click', (e) => { 
-        if (e.target === modal) closeModal(); 
+    // Global Close
+    window.addEventListener('click', e => {
         if (!faqWidgetBox.contains(e.target) && e.target !== openFaqWidgetBtn && !openFaqWidgetBtn.contains(e.target)) {
             faqWidgetBox.classList.remove('active');
         }
     });
 
-    window.addEventListener('keydown', (e) => { 
+    window.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
-            if (modal.classList.contains('active')) closeModal(); 
+            closeModal();
             faqWidgetBox.classList.remove('active');
         }
     });
 
     // ══════════════════════════════════════════
-    // 11. FLOATING HEARTS GENERATION
+    // 7. FLOATING HEARTS (Performance Optimized)
     // ══════════════════════════════════════════
     function initBackgroundHearts() {
-        const container = document.getElementById('hearts-container');
-        if (!container) return;
-
+        if (!heartsContainer) return;
+        const isMobile = window.innerWidth < 768;
         const heartSymbols = ['❤', '❣', '♥'];
-        const heartCount = 50;
+        const heartCount = isMobile ? 25 : 50; // Half on mobile
 
+        const fragment = document.createDocumentFragment();
         for (let i = 0; i < heartCount; i++) {
             const heart = document.createElement('div');
             heart.className = 'floating-heart';
             heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
             
-            const left = Math.random() * 100;
-            const size = 0.5 + Math.random() * 1.5;
-            const duration = 12 + Math.random() * 8;
-            const delay = Math.random() * 20;
-            const opacity = 0.05 + Math.random() * 0.15;
+            heart.style.left = `${Math.random() * 100}%`;
+            heart.style.fontSize = `${0.5 + Math.random() * 1.5}rem`;
+            heart.style.animationDuration = `${12 + Math.random() * 8}s`;
+            heart.style.animationDelay = `${Math.random() * 20}s`;
+            heart.style.opacity = (0.05 + Math.random() * 0.15).toString();
 
-            heart.style.left = `${left}%`;
-            heart.style.fontSize = `${size}rem`;
-            heart.style.animationDuration = `${duration}s`;
-            heart.style.animationDelay = `${delay}s`;
-            heart.style.opacity = opacity.toString();
-
-            container.appendChild(heart);
+            fragment.appendChild(heart);
         }
+        heartsContainer.appendChild(fragment);
     }
-
     initBackgroundHearts();
 });
